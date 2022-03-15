@@ -30,8 +30,27 @@ const contatosController = {
     res.status(200).json(resultado);
   },
 
-  create: (req, res) => {
-    res.send('postar um contato')
+  create: async (req, res) => {
+    // Capturando as info do body
+    let {nome, emails, telefones} = req.body;
+
+    // Salvar o nome do contato
+    let sql = `INSERT INTO contatos (nome, usuarios_id) VALUES ("${nome}", ${uid})`;
+    let resultado = await sequelize.query(sql, {type: sequelize.QueryTypes.INSERT});
+
+    // Levantar o ID do contato recém criado
+    let [idCriado, nLinhas] = resultado;
+
+    // Salvar os emails
+    emails = emails.map(e=>{return {email: e, contatos_id: idCriado}});
+    sequelize.queryInterface.bulkInsert('emails', emails);
+
+    //Salvar os telefones
+    telefones = telefones.map(t=>{return {telefone: t, contatos_id: idCriado}});
+    sequelize.queryInterface.bulkInsert('telefones', telefones);
+
+    // Enviar uma resposta pro cliente
+    res.json({msg:'Ok', idCriado})
   },
 
   destroy: (req, res) => {
