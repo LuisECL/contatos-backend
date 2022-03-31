@@ -126,7 +126,13 @@ let buscaContatos = (trecho) => {
 
 }
 
-showContatos(contatos);
+const carregaContatos = async () => {
+  let resposta = await fetch('/contatos')
+  let contatos = await resposta.json()
+  showContatos(contatos);
+}
+
+carregaContatos();
 
 search.addEventListener('keyup',
   e => buscaContatos(e.target.value)
