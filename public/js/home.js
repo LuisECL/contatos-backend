@@ -1,3 +1,21 @@
+let search = document.getElementById('search');
+let link = document.getElementById('linkAbrirModal');
+let modal = document.getElementById('modal')
+const cancelButton = document.querySelector('#modal button.link')
+const inputParaFocus = document.querySelector('#modal input[name="nome"]')
+
+let mostrarModal = () => {
+  modal.style.display = 'flex';
+  modal.style.opacity = 1;
+  inputParaFocus.focus();
+}
+
+let esconderModal = (evt) => {
+  evt.bubbles = false;
+  modal.style.display = 'none'
+  modal.style.opacity = 0;
+}
+
 // Simulando os contatos em uma variável
 let contatos = [
   {
@@ -109,3 +127,16 @@ let buscaContatos = (trecho) => {
 }
 
 showContatos(contatos);
+
+search.addEventListener('keyup',
+  e => buscaContatos(e.target.value)
+)
+
+link.addEventListener('click', mostrarModal)
+cancelButton.addEventListener('click', esconderModal);
+modal.addEventListener('keyup',
+	e => {
+		if (e.key == 'Escape') {
+		esconderModal(e)
+		}
+});
